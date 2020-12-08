@@ -1,16 +1,6 @@
 version : '2'
 
 services:
-  mongodb24:
-    container_name: phpmongo_mongo24
-    image: mongo:2.4
-    volumes:
-      - ../share/mongo24:/data/db
-  mongodb26:
-    container_name: phpmongo_mongo26
-    image: mongo:2.6
-    volumes:
-      - ../share/mongo26:/data/db
   mongodb30:
     container_name: phpmongo_mongo30
     image: mongo:3.0
@@ -31,13 +21,11 @@ services:
     image: mongo:3.4
     volumes:
       - ../share/mongo34:/data/db
-  php56:
-    image: php:5.6
-    container_name: phpmongo_php56
+  php73:
+    image: php:7.3
+    container_name: phpmongo_php73
     command: bash /phpmongo/docker/bootstrap.sh
     depends_on:
-      - mongodb24
-      - mongodb26
       - mongodb30
       - mongodb32
       - mongodb33

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apt-get install iproute2 --no-install-recommends -y
+
 ### Register host machine
 export DOCKERHOST_IP="$(/sbin/ip route|awk '/default/ { print $3 }')";
 echo "$DOCKERHOST_IP dockerhost" >> /etc/hosts
@@ -14,10 +16,6 @@ then
         zip \
         gpg \
         git
-
-    # install pecl mongo
-    yes '' | pecl install mongo-1.6.2
-    docker-php-ext-enable mongo.so
 
     yes '' | pecl install mongodb
     docker-php-ext-enable mongodb.so
@@ -40,7 +38,7 @@ then
 fi
 
 # print versions
-php -r "echo 'PECL Mongo client: ' . \MongoClient::VERSION . PHP_EOL;"
+php -r "echo 'MongoDB version: ' . MONGODB_VERSION . PHP_EOL;"
 
 # install composer
 if [[  -z $(which composer) ]];

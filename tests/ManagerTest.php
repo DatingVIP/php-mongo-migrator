@@ -4,14 +4,14 @@ namespace Sokil\Mongo\Migrator;
 
 use Symfony\Component\Yaml\Yaml;
 
-class ManagerTest extends \PHPUnit_Framework_TestCase
+class ManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ManagerMock
      */
     private $manager;
-    
-    public function setUp()
+
+    public function setUp(): void
     {
         try {
             $configFile = __DIR__ . '/' . ManagerBuilder::DEFAULT_CONFIG_FILENAME . '.yaml';
@@ -38,21 +38,21 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             throw $e;
         }
     }
-    
-    public function tearDown()
+
+    public function tearDown(): void
     {
         $this->manager->resetCollection('staging');
     }
-    
+
     public function testGetAvailableRevisions()
     {
         $availableRevisions = $this->manager->getAvailableRevisions();
-        
-        $this->assertInternalType('array', $availableRevisions);
-        
+
+        $this->assertIsArray($availableRevisions);
+
         $revision = current($availableRevisions);
         $this->assertInstanceOf('\Sokil\Mongo\Migrator\Revision', $revision);
-        
+
         $this->assertEquals('20140531183810', $revision->getId());
         $this->assertEquals('InitialRevision', $revision->getName());
         $this->assertEquals('20140531183810_InitialRevision.php', $revision->getFilename());
@@ -72,28 +72,28 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceof('\Sokil\Mongo\Client', $stagingClient);
         $this->assertEquals('staging_db', $stagingClient->getCurrentDatabaseName());
     }
-    
+
     public function testMigrate()
     {
         $this->manager->resetCollection('staging');
-        
+
         $this->manager->migrate('20140531201024', 'staging');
-        
+
         $this->assertTrue($this->manager->isRevisionApplied('20140531201024', 'staging'));
         $this->assertTrue($this->manager->isRevisionApplied('20140531201019', 'staging'));
-        
+
         $this->assertFalse($this->manager->isRevisionApplied('20140531201027', 'staging'));
     }
-    
+
     public function testRollback()
     {
         $this->manager->migrate(null, 'staging');
-        
+
         $this->manager->rollback('20140531201024', 'staging');
-        
+
         $this->assertTrue($this->manager->isRevisionApplied('20140531201019', 'staging'));
         $this->assertTrue($this->manager->isRevisionApplied('20140531201024', 'staging'));
-        
+
         $this->assertFalse($this->manager->isRevisionApplied('20140531201025', 'staging'));
         $this->assertFalse($this->manager->isRevisionApplied('20140531201027', 'staging'));
     }

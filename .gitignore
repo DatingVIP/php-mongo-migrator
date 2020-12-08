@@ -1,4 +1,5 @@
 composer.lock
+tests/.phpunit.result.cache
 box.unsigned.json
 vendor/
 share/

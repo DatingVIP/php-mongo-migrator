@@ -4,16 +4,16 @@ namespace Sokil\Mongo\Migrator;
 
 use Symfony\Component\Yaml\Yaml;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     private $config;
-    
-    public function setUp()
+
+    public function setUp(): void
     {
         $configFile = __DIR__ . '/' . ManagerBuilder::DEFAULT_CONFIG_FILENAME . '.yaml';
         $this->config = new Config(Yaml::parse(file_get_contents($configFile)));
     }
-    
+
     public function testGet()
     {
         $this->assertEquals('migrations', $this->config->get('path.migrations'));
@@ -30,12 +30,12 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $configSection = $this->config->get('environments.development');
         $this->assertEquals('42', $configSection['env_var']);
     }
-    
+
     public function testGetDefaultDatabaseName()
     {
         $this->assertEquals('test', $this->config->getDefaultDatabaseName('development'));
     }
-    
+
     public function testGetDsn()
     {
         $this->assertEquals('mongodb://localhost', $this->config->getDsn('development'));
@@ -46,12 +46,12 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('replicaSet' => 'testrs'), $this->config->getConnectOptions('development-replicaset'));
         $this->assertEquals(array(), $this->config->getConnectOptions('staging'));
     }
-    
+
     public function testGetLogDatabaseName()
     {
         $this->assertEquals('test', $this->config->getLogDatabaseName('development'));
     }
-    
+
     public function testGetLogCollectionName()
     {
         $this->assertEquals('migrations', $this->config->getLogCollectionName('development'));
